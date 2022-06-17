@@ -14,6 +14,16 @@ NUM_TO_ACTION = {
     3: 'LEFT'
 }
 
+
+def get_weigthed_sum(mdp, action, util, state):
+    res = 0
+    for action_prob, curr_action in zip(mdp.transition_function[action], mdp.actions.keys()):
+        next_stat = mdp.step(state, curr_action)
+        res += action_prob * util[next_stat[0]][next_stat[1]]
+
+    return res
+
+
 def get_neighbors(i, j, mdp: MDP):
     neighbors = {}
     for action, value in mdp.actions.items():
@@ -45,12 +55,12 @@ def value_iteration(mdp: MDP, U_init: List, epsilon=10 ** (-3)):
                 if mdp.board[i][j] == 'WALL':
                     continue
                 elif state in mdp.terminal_states:
-                    new_U[i][j] = int(mdp.board[i][j])
+                    new_U[i][j] = float(mdp.board[i][j])
                 else:
-                    state_reward = int(mdp.board[i][j])
+                    state_reward = float(mdp.board[i][j])
                     sums = []
                     for action in mdp.actions.keys():
-                        sums.append(calc(mdp, action, curr_U, state))
+                        sums.append(get_weigthed_sum(mdp, action, curr_U, state))
                     new_U[i][j] = state_reward + mdp.gamma * max(sums)
                 delta = max(delta, abs(new_U[i][j] - curr_U[i][j]))
 
@@ -142,9 +152,9 @@ def policy_iteration(mdp, policy_init):
                 curr_state = (i, j)
                 if curr_state not in mdp.terminal_states and mdp.board[i][j] != 'WALL':
                     curr_action = policy[curr_state[0]][curr_state[1]]
-                    max_val = calc(mdp, curr_action, util, curr_state)
+                    max_val = get_weigthed_sum(mdp, curr_action, util, curr_state)
                     for action_prob, action in zip(mdp.transition_function[curr_action], mdp.actions.keys()):
-                        curr_val = calc(mdp, action, util, curr_state)
+                        curr_val = get_weigthed_sum(mdp, action, util, curr_state)
                         if curr_val > max_val:
                             max_val = curr_val
                             changed = True
@@ -153,11 +163,3 @@ def policy_iteration(mdp, policy_init):
     return policy
     # ========================
 
-
-def calc(mdp, action, util, state):
-    res = 0
-    for action_prob, curr_action in zip(mdp.transition_function[action], mdp.actions.keys()):
-        next_stat = mdp.step(state, curr_action)
-        res += action_prob * util[next_stat[0]][next_stat[1]]
-
-    return res
