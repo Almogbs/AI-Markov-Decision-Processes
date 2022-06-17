@@ -1,10 +1,6 @@
 from copy import deepcopy
-#from plistlib import UID
-#from tkinter import N
 import numpy as np
-from numpy import vsplit
 from mdp import *
-from time import sleep
 
 
 NUM_TO_ACTION = {
@@ -13,7 +9,6 @@ NUM_TO_ACTION = {
     2: 'RIGHT',
     3: 'LEFT'
 }
-
 
 def get_weigthed_sum(mdp, action, util, state):
     res = 0
@@ -134,13 +129,12 @@ def policy_evaluation(mdp, policy):
 
 
 def policy_iteration(mdp, policy_init):
-    # TODO:
     # Given the mdp, and the initial policy - policy_init
     # run the policy iteration algorithm
     # return: the optimal policy
     #
 
-    # ====== YOUR CODE: ======
+    # ====== CODE: ======
     changed = True
     policy = deepcopy(policy_init)
 
@@ -159,7 +153,7 @@ def policy_iteration(mdp, policy_init):
                             max_val = curr_val
                             changed = True
                             policy[curr_state[0]][curr_state[1]] = action
-        # print(np.array(util).sum())
+    
     return policy
     # ========================
 
