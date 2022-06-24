@@ -37,7 +37,6 @@ def value_iteration(mdp: MDP, U_init: List, epsilon=10 ** (-3)):
     # run the value iteration algorithm and
     # return: the U obtained at the end of the algorithms' run.
     #
-    # ====== CODE: ======
     new_U = deepcopy(U_init)
     curr_U = deepcopy(U_init)
 
@@ -65,15 +64,12 @@ def value_iteration(mdp: MDP, U_init: List, epsilon=10 ** (-3)):
         curr_U = deepcopy(new_U)
 
     return curr_U
-    # ========================
 
 
 
 def get_policy(mdp: MDP, U: List) -> List:
     # Given the mdp and the utility of each state - U (which satisfies the Belman equation)
     # return: the policy
-    #
-    # ====== CODE: ======
     policy = []
     for _ in range(mdp.num_row):
         policy.append([0] * mdp.num_col)
@@ -96,15 +92,11 @@ def get_policy(mdp: MDP, U: List) -> List:
                 policy[i][j] = actions[rewards.index(max_reward)]
     
     return policy
-    # ========================
-
 
 
 def policy_evaluation(mdp, policy):
     # Given the mdp, and a policy
     # return: the utility U(s) of each state s
-    #
-    # ====== CODE: ======
     P = [[0 for _ in range(mdp.num_col * mdp.num_row)] for _ in range(mdp.num_col * mdp.num_row)]
     I = np.zeros_like(P)
     R = [0 for _ in range(mdp.num_col * mdp.num_row)]
@@ -125,16 +117,12 @@ def policy_evaluation(mdp, policy):
     res = [[res[i*(mdp.num_row + 1) + j] for j in range(mdp.num_col)] for i in range(mdp.num_row)]
 
     return list(res)
-    # ========================
 
 
 def policy_iteration(mdp, policy_init):
     # Given the mdp, and the initial policy - policy_init
     # run the policy iteration algorithm
     # return: the optimal policy
-    #
-
-    # ====== CODE: ======
     changed = True
     policy = deepcopy(policy_init)
 
@@ -155,5 +143,3 @@ def policy_iteration(mdp, policy_init):
                             policy[curr_state[0]][curr_state[1]] = action
     
     return policy
-    # ========================
-
